@@ -19,11 +19,17 @@ RUN adduser sh sudo
 RUN rm /usr/local/lib/python3.5/dist-packages/apns.py
 ADD apns.py /usr/local/lib/python3.5/dist-packages/
 
+RUN mkdir /etc/sh
+
 USER sh
 WORKDIR /home/sh
 
 RUN mkdir sentienthome
+RUN mkdir sentienthome/transport
+RUN mkdir sentienthome/application
 
 USER root
+
+RUN ln -s /etc/sh /home/sh/sentienthome/project
 
 ENTRYPOINT service ssh start && service telegraf start && /bin/bash
