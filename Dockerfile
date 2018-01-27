@@ -36,6 +36,7 @@ RUN mkdir sentienthome/transport
 RUN mkdir sentienthome/application
 RUN mkdir sentienthome/build
 RUN mkdir sentienthome/launcher
+RUN mkdir sentienthome/docs
 
 RUN git clone http://build_bot:NinA91git@gitlab.unifiedneumaier.com:30000/sentient-home/sh-launcher.git sentienthome/launcher
 
