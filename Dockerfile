@@ -4,7 +4,7 @@ RUN apt-get update && apt-get upgrade -y
 
 RUN apt-get install sudo curl openssh-server python3 python3-dev nano python3-pip libcupti-dev htop apt-transport-https git -y
 
-RUN apt-get update && apt-get install sshpass apache2 unzip -y
+RUN apt-get update && apt-get install sshpass apache2 apache2-utils unzip -y
 RUN apt-get -y install tzdata && ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 
 ADD install_telegraf.sh /mnt
@@ -13,8 +13,14 @@ RUN rm /etc/telegraf/telegraf.conf
 ADD telegraf.conf /etc/telegraf/
 
 ADD install_ui5.sh /mnt
+RUN rm -rf /var/www/html/*
+RUN git clone http://build_bot:NinA91git@gitlab.unifiedneumaier.com:30000/sentient-home/sh-ai.git /var/www/html
 RUN bash /mnt/install_ui5.sh
-ADD index.html /var/www/html/
+
+ADD setup_apache.sh /mnt
+RUN rm /etc/apache2/sites-enabled/000-default.conf
+ADD 000-default.conf /etc/apache2/sites-enabled
+RUN bash /mnt/setup_apache.sh
 
 ADD req.txt /mnt
 RUN pip3 install --upgrade pip
@@ -42,6 +48,8 @@ RUN mkdir sentienthome/launcher
 RUN mkdir sentienthome/docs
 
 RUN git clone http://build_bot:NinA91git@gitlab.unifiedneumaier.com:30000/sentient-home/sh-launcher.git sentienthome/launcher
+RUN cd sentienthome/launcher
+RUN git checkout dev
 
 
 USER root
